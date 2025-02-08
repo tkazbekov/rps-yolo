@@ -75,8 +75,8 @@ function getOutcome(bet: Bet, computerMove: Move): Outcome {
   };
 }
 
-export function playRound(bet: Bet): { outcome: Outcome; computerMove: Move } {
+export function playRound(bet: Bet): number {
   const computerMove = getComputerMove();
   const outcome = getOutcome(bet, computerMove);
-  return { outcome, computerMove };
+  return outcome.multiplier;
 }
