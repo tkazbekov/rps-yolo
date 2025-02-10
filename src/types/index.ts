@@ -16,3 +16,8 @@ export interface Outcome {
   winningWager?: Wager;
   multiplier: number;
 }
+
+export interface GameResult {
+    computerMove: Move;
+    outcome: Outcome;
+}

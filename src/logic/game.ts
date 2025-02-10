@@ -1,4 +1,4 @@
-import { Bet, Outcome, Move, Wager } from "../types";
+import { Bet, Outcome, Move, Wager, GameResult } from "../types";
 
 function getComputerMove(): Move {
   const moves: Move[] = ["rock", "paper", "scissors"];
@@ -75,8 +75,8 @@ function getOutcome(bet: Bet, computerMove: Move): Outcome {
   };
 }
 
-export function playRound(bet: Bet): number {
+export function playRound(bet: Bet): GameResult {
   const computerMove = getComputerMove();
   const outcome = getOutcome(bet, computerMove);
-  return outcome.multiplier;
+  return { computerMove, outcome };
 }
