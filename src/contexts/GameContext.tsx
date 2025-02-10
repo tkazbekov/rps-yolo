@@ -1,81 +1,96 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
-import { Bet, Wager } from '../types';
-import { playRound } from '../logic/game';
-import { updateBalance } from '../logic/balance';
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import {
+  calculatePayout,
+  increaseBalance,
+  resetBalance,
+} from "../logic/balance";
+import { playGameRound as gamePlayRound } from "../logic/game";
+import { Bet, Move, RoundOddsConfig } from "../types";
+import { placeWager } from "../logic/bet";
 
 interface GameContextType {
   balance: number;
   currentBet: Bet;
-  computerMove: string | null;
-  multiplier: number | null;
-  placeWager: (wager: Wager) => void;
-  playGameRound: () => void;
+  increaseWager: (position: Move) => void;
+  playRound: () => void;
+  lastComputerMove: Move | null;
+  lastPayout: number | null;
   resetGame: () => void;
 }
 
+const oddsConfig: RoundOddsConfig = {
+  single: { winMultiplier: 14, lossMultiplier: 0, tieMultiplier: 1 },
+  double: { winMultiplier: 3, lossMultiplier: 0, tieMultiplier: 0 },
+};
+
+const wagerAmount = 500;
+
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
-export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-
+export const GameProvider: React.FC<{ children: ReactNode }> = ({
+  children,
+}) => {
   const [balance, setBalance] = useState<number>(5000);
   const [currentBet, setCurrentBet] = useState<Bet>({ wagers: [] });
-  const [computerMove, setComputerMove] = useState<string | null>(null);
-  const [multiplier, setMultiplier] = useState<number | null>(null);
+  const [lastComputerMove, setLastComputerMove] = useState<Move | null>(null);
+  const [lastPayout, setLastPayout] = useState<number | null>(null);
 
-  const placeWager = (wager: Wager) => {
-    if (wager.amount > balance) {
-      console.error('Insufficient balance for this wager');
-      return;
+  const increaseWager = (position: Move) => {
+    try {
+      const { newBet, newBalance } = placeWager(
+        currentBet,
+        balance,
+        position,
+        wagerAmount
+      );
+      setCurrentBet(newBet);
+      setBalance(newBalance);
+    } catch (err) {
+      console.error(err);
     }
-    setBalance(prev => prev - wager.amount);
-    setCurrentBet(prevBet => ({
-      ...prevBet,
-      wagers: [...prevBet.wagers, wager],
-    }));
   };
 
-  const playGameRound = () => {
+  const playRound = () => {
     if (currentBet.wagers.length === 0) {
-      console.error('No wager placed');
+      console.error("No wager placed.");
       return;
     }
+    const { computerMove, wagerOutcomes } = gamePlayRound(currentBet);
+    setLastComputerMove(computerMove);
 
-    const { computerMove, outcome } = playRound(currentBet);
-    setComputerMove(computerMove);
-    setMultiplier(outcome.multiplier);
+    const payout = calculatePayout(wagerOutcomes, oddsConfig);
+    setLastPayout(payout);
 
-    const totalWager = currentBet.wagers.reduce((sum, wager) => sum + wager.amount, 0);
-    setBalance(prev => updateBalance(prev, totalWager, outcome.multiplier));
+    setBalance(increaseBalance(balance, payout));
     setCurrentBet({ wagers: [] });
   };
 
-  /**
-   * I know it was said to not implement a reset, but it just makes sense to have one
-   */
   const resetGame = () => {
-    setBalance(5000);
+    setBalance(resetBalance());
     setCurrentBet({ wagers: [] });
-    setComputerMove(null);
-    setMultiplier(null);
+    setLastComputerMove(null);
+    setLastPayout(null);
   };
 
   const contextValue: GameContextType = {
     balance,
     currentBet,
-    computerMove,
-    multiplier,
-    placeWager,
-    playGameRound,
+    increaseWager,
+    playRound,
+    lastComputerMove,
+    lastPayout,
     resetGame,
   };
 
-  return <GameContext.Provider value={contextValue}>{children}</GameContext.Provider>;
+  return (
+    <GameContext.Provider value={contextValue}>{children}</GameContext.Provider>
+  );
 };
 
 export const useGame = (): GameContextType => {
   const context = useContext(GameContext);
   if (!context) {
-    throw new Error('useGame must be used within a GameProvider');
+    throw new Error("useGame must be used within a GameProvider");
   }
   return context;
 };

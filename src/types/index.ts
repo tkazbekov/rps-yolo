@@ -1,6 +1,4 @@
-export type Move = 'rock' | 'paper' | 'scissors';
-
-export type RoundResult = 'win' | 'loss' | 'tie';
+export type Move = "rock" | "paper" | "scissors";
 
 export interface Wager {
   position: Move;
@@ -11,13 +9,25 @@ export interface Bet {
   wagers: Wager[];
 }
 
-export interface Outcome {
-  result: RoundResult;
-  winningWager?: Wager;
-  multiplier: number;
+export type OutcomeStatus = "win" | "tie" | "lose";
+
+export interface WagerOutcome {
+  wager: Wager;
+  result: OutcomeStatus;
 }
 
-export interface GameResult {
-    computerMove: Move;
-    outcome: Outcome;
+export interface RoundOddsConfig {
+  single: BetOddsConfig;
+  double: BetOddsConfig;
+}
+
+interface BetOddsConfig {
+  winMultiplier: number;
+  lossMultiplier: number;
+  tieMultiplier: number;
+}
+
+export interface RoundResults {
+  computerMove: Move;
+  wagerOutcomes: WagerOutcome[];
 }
