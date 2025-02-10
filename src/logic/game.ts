@@ -14,25 +14,18 @@ export function playGameRound(bet: Bet): RoundResults {
     scissors: "paper",
   };
 
+  const allowTie = bet.wagers.length === 1;
+
   const wagerOutcomes: WagerOutcome[] = bet.wagers.map((wager) => {
-    let result: OutcomeStatus = "lose";
-    if (bet.wagers.length === 1) {
-      if (wager.position === computerMove) {
-        result = "tie";
-      } else if (beats[wager.position] === computerMove) {
-        result = "win";
-      } else {
-        result = "lose";
-      }
-    } else if (bet.wagers.length === 2) {
-      if (wager.position === computerMove) {
-        result = "lose";
-      } else if (beats[wager.position] === computerMove) {
-        result = "win";
-      } else {
-        result = "lose";
-      }
-    }
+    const isTie = wager.position === computerMove;
+    const isWin = beats[wager.position] === computerMove;
+    const result: OutcomeStatus = isTie
+      ? allowTie
+        ? "tie"
+        : "lose"
+      : isWin
+      ? "win"
+      : "lose";
     return { wager, result };
   });
 

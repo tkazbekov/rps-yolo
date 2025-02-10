@@ -13,6 +13,10 @@ function composeBet(bet: Bet, position: Move, amount: number): Bet {
     newWagers = [...bet.wagers, { position, amount }];
   }
 
+  if (newWagers.length > 2) {
+    throw new Error("Can't have more than 2 positions with wagers");
+  }
+
   return { wagers: newWagers };
 }
 
