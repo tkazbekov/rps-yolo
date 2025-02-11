@@ -1,4 +1,8 @@
-export type Move = "rock" | "paper" | "scissors";
+export const enum Move {
+  ROCK = "rock",
+  PAPER = "paper",
+  SCISSORS = "scissors",
+}
 
 export interface Wager {
   position: Move;
@@ -9,19 +13,25 @@ export interface Bet {
   wagers: Wager[];
 }
 
-export type OutcomeStatus = "win" | "tie" | "lose";
+export const enum OutcomeStatus {
+  WIN = "win",
+  TIE = "tie",
+  LOSE = "lose",
+}
 
 export interface WagerOutcome {
   wager: Wager;
   result: OutcomeStatus;
 }
 
-export interface RoundOddsConfig {
-  single: BetOddsConfig;
-  double: BetOddsConfig;
+export const enum BetType {
+  SINGLE = "single",
+  DOUBLE = "double",
 }
 
-interface BetOddsConfig {
+export type RoundOddsConfig = Record<BetType, BetOddsConfig>;
+
+export interface BetOddsConfig {
   winMultiplier: number;
   lossMultiplier: number;
   tieMultiplier: number;

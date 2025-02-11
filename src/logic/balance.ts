@@ -1,4 +1,4 @@
-import { RoundOddsConfig, WagerOutcome } from "../types";
+import { BetType, OutcomeStatus, RoundOddsConfig, WagerOutcome } from "../types";
 
 export function decreaseBalance(
   currentBalance: number,
@@ -25,7 +25,7 @@ export function calculatePayout(
   outcomes: WagerOutcome[],
   config: RoundOddsConfig
 ): number {
-  const betType = outcomes.length === 1 ? "single" : "double";
+  const betType = outcomes.length === 1 ? BetType.SINGLE : BetType.DOUBLE;
   const odds = config[betType];
 
   let totalPayout = 0;
@@ -33,9 +33,9 @@ export function calculatePayout(
     const wagerAmount = outcomes[i].wager.amount;
     const outcomeResult = outcomes[i].result;
     let multiplier = 0;
-    if (outcomeResult === "win") {
+    if (outcomeResult === OutcomeStatus.WIN) {
       multiplier = odds.winMultiplier;
-    } else if (outcomeResult === "tie") {
+    } else if (outcomeResult === OutcomeStatus.TIE) {
       multiplier = odds.tieMultiplier;
     } else {
       multiplier = odds.lossMultiplier;

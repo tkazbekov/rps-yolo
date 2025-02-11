@@ -1,6 +1,6 @@
 import React from "react";
 import { useGame } from "../../contexts/GameContext";
-// import { Move } from '../../types';
+import { Move } from "../../types";
 
 const GameInterface: React.FC = () => {
   const {
@@ -17,13 +17,13 @@ const GameInterface: React.FC = () => {
     <div>
       <h2>Balance: {balance}</h2>
       <div>
-        <button onClick={() => increaseWager("rock")}>
+        <button onClick={() => increaseWager(Move.ROCK)}>
           Bet on Rock (+500)
         </button>
-        <button onClick={() => increaseWager("paper")}>
+        <button onClick={() => increaseWager(Move.PAPER)}>
           Bet on Paper (+500)
         </button>
-        <button onClick={() => increaseWager("scissors")}>
+        <button onClick={() => increaseWager(Move.SCISSORS)}>
           Bet on Scissors (+500)
         </button>
       </div>
@@ -36,16 +36,18 @@ const GameInterface: React.FC = () => {
         <ul>
           <li>
             Rock:{" "}
-            {currentBet.wagers.find((w) => w.position === "rock")?.amount || 0}
+            {currentBet.wagers.find((w) => w.position === Move.ROCK)?.amount ||
+              0}
           </li>
           <li>
             Paper:{" "}
-            {currentBet.wagers.find((w) => w.position === "paper")?.amount || 0}
+            {currentBet.wagers.find((w) => w.position === Move.PAPER)?.amount ||
+              0}
           </li>
           <li>
             Scissors:{" "}
-            {currentBet.wagers.find((w) => w.position === "scissors")?.amount ||
-              0}
+            {currentBet.wagers.find((w) => w.position === Move.SCISSORS)
+              ?.amount || 0}
           </li>
         </ul>
       </div>

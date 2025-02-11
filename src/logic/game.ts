@@ -1,7 +1,8 @@
-import { Bet, Move, WagerOutcome, OutcomeStatus, RoundResults } from "../types";
+import { Bet, Move, OutcomeStatus, RoundResults } from "../types";
 
 function getRandomMove(): Move {
-  const moves: Move[] = ["rock", "paper", "scissors"];
+  // will keep using a const enum, seems easier to read
+  const moves: Move[] = [Move.ROCK, Move.PAPER, Move.SCISSORS];
   return moves[Math.floor(Math.random() * moves.length)];
 }
 
@@ -9,23 +10,23 @@ export function playGameRound(bet: Bet): RoundResults {
   const computerMove: Move = getRandomMove();
 
   const beats: Record<Move, Move> = {
-    rock: "scissors",
-    paper: "rock",
-    scissors: "paper",
+    [Move.ROCK]: Move.SCISSORS,
+    [Move.PAPER]: Move.ROCK,
+    [Move.SCISSORS]: Move.PAPER,
   };
 
   const allowTie = bet.wagers.length === 1;
 
-  const wagerOutcomes: WagerOutcome[] = bet.wagers.map((wager) => {
+  const wagerOutcomes = bet.wagers.map((wager) => {
     const isTie = wager.position === computerMove;
     const isWin = beats[wager.position] === computerMove;
     const result: OutcomeStatus = isTie
       ? allowTie
-        ? "tie"
-        : "lose"
+        ? OutcomeStatus.TIE
+        : OutcomeStatus.LOSE
       : isWin
-      ? "win"
-      : "lose";
+      ? OutcomeStatus.WIN
+      : OutcomeStatus.LOSE;
     return { wager, result };
   });
 
