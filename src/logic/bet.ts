@@ -30,3 +30,10 @@ export function placeWager(
   const newBet = composeBet(currentBet, position, amount);
   return { newBet, newBalance };
 }
+
+export function getMissingMove(bet: Bet): Move | null {
+  const moves: Move[] = [Move.ROCK, Move.PAPER, Move.SCISSORS];
+  const wageredPositions = bet.wagers.map(w => w.position);
+  const missingMoves = moves.filter(move => !wageredPositions.includes(move));
+  return missingMoves.length === 1 ? missingMoves[0] : null;
+}

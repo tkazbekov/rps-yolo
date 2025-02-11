@@ -1,0 +1,30 @@
+.game-interface {
+  --color-action-button: var(--color-gold);
+  --border-action-button: 2px solid var(--color-action-button);
+  --bg-action-button: var(--color-black);
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+}
+
+.action-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 10rem;
+  height: 4.5rem;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-block: 4.5rem 3rem;
+  border-radius: 3rem;
+  color: var(--color-action-button);
+  border: var(--border-action-button);
+  background-color: var(--bg-action-button);
+}

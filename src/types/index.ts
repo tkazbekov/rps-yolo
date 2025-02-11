@@ -1,4 +1,4 @@
-export const enum Move {
+export enum Move {
   ROCK = "rock",
   PAPER = "paper",
   SCISSORS = "scissors",

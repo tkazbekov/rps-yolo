@@ -1,0 +1,25 @@
+.dashboard {
+  --dashboard-height: 18.25rem;
+  --color-message: var(--color-gold);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: var(--dashboard-height);
+  box-sizing: border-box;
+}
+
+.dash-game {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dash-message {
+  color: var(--color-message);
+  text-transform: uppercase;
+  font-size: 0.875rem;
+  font-weight: 500;
+}

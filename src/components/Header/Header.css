@@ -1,0 +1,28 @@
+.game-header {
+  --bg-header: var(--color-black);
+  --color-stat: var(--color-gold);
+  --color-stat-value: var(--color-white);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--bg-header);
+  width: 100%;
+  padding: 0.25rem 1rem;
+}
+
+.game-stats {
+  display: flex;
+  gap: 3rem;
+}
+
+.game-stat {
+  color: var(--color-stat);
+  font-weight: 700;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.stat-value {
+  color: var(--color-value);
+}

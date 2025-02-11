@@ -1,0 +1,12 @@
+.matchup {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--color-gold);
+
+}
+.matchup-item {
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--color-white);
+}

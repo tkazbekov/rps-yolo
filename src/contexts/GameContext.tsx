@@ -1,20 +1,29 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import {
   calculatePayout,
   increaseBalance,
-  resetBalance,
 } from "../logic/balance";
 import { playGameRound as gamePlayRound } from "../logic/game";
-import { Bet, Move, RoundOddsConfig } from "../types";
-import { placeWager } from "../logic/bet";
+import { Bet, Move, OutcomeStatus, RoundOddsConfig, Wager } from "../types";
+import { placeWager, getMissingMove } from "../logic/bet";
 
 interface GameContextType {
   balance: number;
   currentBet: Bet;
+  currentBetAmount: number;
   increaseWager: (position: Move) => void;
   playRound: () => void;
   lastComputerMove: Move | null;
   lastPayout: number | null;
+  winningWager: Wager | null;
+  bettingEnabled: boolean;
+  disabledPosition: Move | null;
   resetGame: () => void;
 }
 
@@ -34,6 +43,28 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
   const [currentBet, setCurrentBet] = useState<Bet>({ wagers: [] });
   const [lastComputerMove, setLastComputerMove] = useState<Move | null>(null);
   const [lastPayout, setLastPayout] = useState<number | null>(null);
+  const [winningWager, setWinningWager] = useState<Wager | null>(null);
+  const [bettingEnabled, setBettingEnabled] = useState<boolean>(true);
+
+  const currentBetAmount = currentBet.wagers.reduce(
+    (sum, wager) => sum + wager.amount,
+    0
+  );
+
+  const disabledPosition =
+    currentBet.wagers.length === 2 ? getMissingMove(currentBet) : null;
+
+  useEffect(() => {
+    if (balance < wagerAmount) {
+      setBettingEnabled(false);
+    }
+  }, [balance]);
+
+  useEffect(() => {
+    if (lastComputerMove !== null) {
+      setBettingEnabled(false);
+    }
+  }, [lastComputerMove]);
 
   const increaseWager = (position: Move) => {
     try {
@@ -55,30 +86,46 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({
       console.error("No wager placed.");
       return;
     }
+    setBettingEnabled(false);
+
     const { computerMove, wagerOutcomes } = gamePlayRound(currentBet);
     setLastComputerMove(computerMove);
 
-    const payout = calculatePayout(wagerOutcomes, oddsConfig);
-    setLastPayout(payout);
+    const winOutcome = wagerOutcomes.find(
+      (outcome) => outcome.result === OutcomeStatus.WIN
+    );
 
-    setBalance(increaseBalance(balance, payout));
-    setCurrentBet({ wagers: [] });
+    const payout = calculatePayout(wagerOutcomes, oddsConfig);
+
+    setTimeout(() => {
+      setWinningWager(winOutcome ? winOutcome.wager : null);
+      setLastPayout(payout);
+      setBalance((prevBalance) => increaseBalance(prevBalance, payout));
+      setCurrentBet({ wagers: [] });
+    }, 2000);
   };
 
   const resetGame = () => {
-    setBalance(resetBalance());
+    if (balance >= wagerAmount) {
+      setBettingEnabled(true);
+    }
     setCurrentBet({ wagers: [] });
     setLastComputerMove(null);
     setLastPayout(null);
+    setWinningWager(null);
   };
 
   const contextValue: GameContextType = {
     balance,
     currentBet,
+    currentBetAmount,
     increaseWager,
     playRound,
     lastComputerMove,
     lastPayout,
+    winningWager,
+    bettingEnabled,
+    disabledPosition,
     resetGame,
   };
 

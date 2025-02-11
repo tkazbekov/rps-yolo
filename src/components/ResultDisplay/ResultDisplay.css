@@ -1,0 +1,36 @@
+.result {
+  /* Colors */
+  --color-win: var(--color-green);
+  --color-payout: var(--color-gold);
+  --color-payout-value: var(--color-white);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}
+
+.result-caption {
+  font-size: 2.5rem;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0;
+}
+
+.result-caption.win {
+  color: var(--color-win);
+}
+
+.result-payout {
+  display: flex;
+  gap: 1rem;
+  color: var(--color-payout);
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0;
+}
+
+.payout-value {
+  color: var(--color-payout-value);
+}
