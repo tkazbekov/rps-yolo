@@ -16,7 +16,7 @@ export interface Bet {
 export const enum OutcomeStatus {
   WIN = "win",
   TIE = "tie",
-  LOSE = "lose",
+  LOSS = "lose",
 }
 
 export interface WagerOutcome {
