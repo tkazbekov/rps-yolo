@@ -11,7 +11,8 @@ import {
 } from "../logic/balance";
 import { playGameRound as gamePlayRound } from "../logic/game";
 import { Bet, Move, OutcomeStatus, RoundOddsConfig, Wager } from "../types";
-import { placeWager, getMissingMove } from "../logic/bet";
+import { placeWager } from "../logic/bet";
+import { getMissingMove } from "../logic/move";
 
 interface GameContextType {
   balance: number;
