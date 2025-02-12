@@ -24,7 +24,7 @@
 }
 
 .stat-value {
-  color: var(--color-value);
+  color: var(--color-stat-value);
 }
 
 @media screen and (max-width: 32.5rem) {
