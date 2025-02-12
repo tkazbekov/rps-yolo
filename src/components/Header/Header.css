@@ -26,3 +26,14 @@
 .stat-value {
   color: var(--color-value);
 }
+
+@media screen and (max-width: 32.5rem) {
+  .game-stats {
+    gap: 1rem;
+  }
+
+  .game-stat {
+    font-size: 0.75rem;
+  }
+  
+}
